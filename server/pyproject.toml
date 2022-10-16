@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "pyquizserver"
+version = "0.1.0"
+description = ""
+authors = ["Igor Tolmachov <me@igorek.dev>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pydantic = "^1.10.2"
+fastapi = "^0.85.1"
+uvicorn = "^0.18.3"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.982"
+black = "^22.10.0"
+isort = "^5.10.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
