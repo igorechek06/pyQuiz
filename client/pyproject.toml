@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "pyquizclient"
+version = "0.1.0"
+description = ""
+authors = ["Igor Tolmachov <me@igorek.dev>"]
+license = "GPL-3.0-only"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+PyQt5 = "^5.15.7"
+pydantic = "^1.10.2"
+requests = "^2.28.1"
+
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^0.982"
+black = "^22.10.0"
+isort = "^5.10.1"
+types-requests = "^2.28.11.2"
+PyQt5-stubs = "^5.15.6.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
