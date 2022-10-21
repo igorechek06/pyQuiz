@@ -6,6 +6,8 @@ services:
     restart: "always"
     env_file:
       - env.env
+    ports:
+      - 5000:5000
   database:
     container_name: "pyquiz-database"
     image: postgres:bullseye
