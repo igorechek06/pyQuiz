@@ -1,7 +1,8 @@
 {
-    "files.exclude": {
-        "**/.mypy_cache": true,
-        "**/.venv": true,
-        "**/__pycache__": true
-    }
+  "files.exclude": {
+    "**/.mypy_cache": true,
+    "**/.venv": true,
+    "**/__pycache__": true
+  },
+  "cSpell.words": ["fastapi", "ormar", "pydantic", "sessionmaker", "sqlalchemy"]
 }

@@ -1,0 +1,18 @@
+version: "3"
+
+services:
+  server:
+    build: "."
+    restart: "always"
+    env_file:
+      - env.env
+  database:
+    image: postgres:bullseye
+    restart: "always"
+    env_file:
+      - env.env
+    volumes:
+      - database:/var/lib/postgresql
+
+volumes:
+  database:

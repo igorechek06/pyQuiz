@@ -1,6 +1,7 @@
-from server import app
+# isort: skip_file
+import app
 import models
-import databese
+import database as db
 import endpoints
 
-app.include_router(endpoints.root)
+app.app.include_router(endpoints.root)

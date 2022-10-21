@@ -1,25 +1,77 @@
-from server import app
-from models import Quiz
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from sqlalchemy import and_
+
+import database as db
+import models as m
 
 root = APIRouter(prefix="/quiz")
 
 
 @root.get("/get")
-async def get(id: int) -> Quiz:
-    pass
+async def get(id: int) -> m.Quiz | None:
+    with db.session.begin() as session:
+        quiz: db.Quiz = session.query(db.Quiz).get(id)
+        if quiz is not None:
+            return m.Quiz(
+                id=quiz.id,
+                label=quiz.label,
+                hidden=quiz.hidden,
+                image_url=quiz.image_url,
+                questions=quiz.questions,
+            )
+
+
+@root.post("/add")
+async def add(request: Request) -> None:
+    quiz = m.Quiz.parse_obj(await request.json())
+    with db.session.begin() as session:
+        session.add(db.Quiz(**quiz.dict()))
 
 
 @root.get("/find")
-async def find(label: str) -> list[Quiz]:
-    pass
+async def find(label: str) -> list[m.Quiz]:
+    with db.session.begin() as session:
+        quizzes: list[db.Quiz] = (
+            session.query(db.Quiz)
+            .filter(
+                and_(
+                    db.Quiz.label.like(f"%{label}%"),
+                    db.Quiz.hidden.is_(False),
+                ),
+            )
+            .all()
+        )
+        return [
+            m.Quiz(
+                id=quiz.id,
+                label=quiz.label,
+                hidden=quiz.hidden,
+                image_url=quiz.image_url,
+                questions=quiz.questions,
+            )
+            for quiz in quizzes
+        ]
+
+
+@root.get("/all")
+async def all(count: int, offset: int = 0) -> list[m.Quiz]:
+    with db.session.begin() as session:
+        quizzes: list[db.Quiz] = (
+            session.query(db.Quiz).filter(db.Quiz.hidden.is_(False)).all()
+        )
+        return [
+            m.Quiz(
+                id=quiz.id,
+                label=quiz.label,
+                hidden=quiz.hidden,
+                image_url=quiz.image_url,
+                questions=quiz.questions,
+            )
+            for quiz in quizzes[offset : offset + count]
+        ]
 
 
 @root.get("/count")
 async def count() -> int:
-    pass
-
-
-@root.get("/all")
-async def all(count: int, offset: int = 0) -> list[Quiz]:
-    pass
+    with db.session.begin() as session:
+        return session.query(db.Quiz).filter(db.Quiz.hidden.is_(False)).count()
