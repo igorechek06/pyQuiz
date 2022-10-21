@@ -7,6 +7,7 @@ services:
     env_file:
       - env.env
   database:
+    container_name: "pyquiz-database"
     image: postgres:bullseye
     restart: "always"
     env_file:
