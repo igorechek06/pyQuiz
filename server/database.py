@@ -1,4 +1,13 @@
-from sqlalchemy import JSON, Boolean, Column, Integer, MetaData, Text, create_engine
+from sqlalchemy import (
+    JSON,
+    Boolean,
+    Column,
+    ForeignKey,
+    Integer,
+    MetaData,
+    Text,
+    create_engine,
+)
 from sqlalchemy.orm import registry
 from sqlalchemy.orm.decl_api import DeclarativeMeta
 from sqlalchemy.orm.session import sessionmaker
@@ -28,6 +37,13 @@ class Quiz(Base):
     hidden = Column(Boolean, default=True)
     image_url = Column(Text, default=None, nullable=True)
     questions = Column(JSON, default=[])
+
+
+class Answers(Base):
+    __tablename__ = "answers"
+    id = Column(Integer, primary_key=True)
+    quiz_id = ForeignKey(Quiz.id)
+    answers = Column(JSON, default=[])
 
 
 Base.metadata.create_all()

@@ -28,17 +28,14 @@ async def add(request: Request) -> None:
         session.add(db.Quiz(**quiz.dict()))
 
 
-@root.get("/find")
-async def find(label: str) -> list[m.Quiz]:
+@root.get("/all")
+async def all(count: int, offset: int = 0) -> list[m.Quiz]:
     with db.session.begin() as session:
         quizzes: list[db.Quiz] = (
             session.query(db.Quiz)
-            .filter(
-                and_(
-                    db.Quiz.label.like(f"%{label}%"),
-                    db.Quiz.hidden.is_(False),
-                ),
-            )
+            .filter(db.Quiz.hidden.is_(False))
+            .limit(count)
+            .offset(offset)
             .all()
         )
         return [
@@ -53,11 +50,15 @@ async def find(label: str) -> list[m.Quiz]:
         ]
 
 
-@root.get("/all")
-async def all(count: int, offset: int = 0) -> list[m.Quiz]:
+@root.get("/find")
+async def find(label: str, count: int, offset: int = 0) -> list[m.Quiz]:
     with db.session.begin() as session:
         quizzes: list[db.Quiz] = (
-            session.query(db.Quiz).filter(db.Quiz.hidden.is_(False)).all()
+            session.query(db.Quiz)
+            .filter(and_(db.Quiz.label.like(f"%{label}%"), db.Quiz.hidden.is_(False)))
+            .limit(count)
+            .offset(offset)
+            .all()
         )
         return [
             m.Quiz(
@@ -67,11 +68,18 @@ async def all(count: int, offset: int = 0) -> list[m.Quiz]:
                 image_url=quiz.image_url,
                 questions=quiz.questions,
             )
-            for quiz in quizzes[offset : offset + count]
+            for quiz in quizzes
         ]
 
 
 @root.get("/count")
-async def count() -> int:
+async def count(label: str | None = None) -> int:
     with db.session.begin() as session:
-        return session.query(db.Quiz).filter(db.Quiz.hidden.is_(False)).count()
+        if label is None:
+            return session.query(db.Quiz).filter(db.Quiz.hidden.is_(False)).count()
+        else:
+            return (
+                session.query(db.Quiz)
+                .filter(and_(db.Quiz.label.like(f"%{label}%"), db.Quiz.hidden.is_(False)))
+                .count()
+            )

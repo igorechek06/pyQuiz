@@ -1,0 +1,12 @@
+<RCC>
+  <qresource prefix="src">
+    <file>src/play.png</file>
+    <file>src/no-file.png</file>
+    <file>src/wait-file.png</file>
+    <file>src/next.png</file>
+    <file>src/prev.png</file>
+    <file>src/plus.png</file>
+    <file>src/search.png</file>
+    <file>src/logo.png</file>
+  </qresource>
+</RCC>
