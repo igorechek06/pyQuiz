@@ -62,5 +62,5 @@ class Ui_Quiz(object):
     def retranslateUi(self, Quiz):
         _translate = QtCore.QCoreApplication.translate
         Quiz.setWindowTitle(_translate("Quiz", "Quiz"))
-        self.pushButton.setText(_translate("Quiz", "Начать"))
+        self.pushButton.setText(_translate("Quiz", "Пройти тест"))
 import src_rc

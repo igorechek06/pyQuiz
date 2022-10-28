@@ -104,5 +104,5 @@ class Ui_MainMenu(object):
         MainMenu.setWindowTitle(_translate("MainMenu", "PyQuiz"))
         self.searchField.setPlaceholderText(_translate("MainMenu", "Имя или id"))
         self.searchButton.setText(_translate("MainMenu", "Найти"))
-        self.createQuizButton.setText(_translate("MainMenu", "Создать"))
+        self.createQuizButton.setText(_translate("MainMenu", "Создать тест"))
 import src_rc
