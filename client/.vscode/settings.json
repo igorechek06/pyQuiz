@@ -4,5 +4,5 @@
     "**/.venv": true,
     "**/__pycache__": true
   },
-  "python.analysis.typeCheckingMode": "off"
+  "cSpell.words": ["Pixmap", "pydantic", "pyqt", "toqpixmap"]
 }

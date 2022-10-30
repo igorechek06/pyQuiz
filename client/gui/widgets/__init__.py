@@ -1,1 +1,1 @@
-from . import quiz_widget
+from . import quiz

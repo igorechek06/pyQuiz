@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './gui/widgets/quiz_widget.ui'
+# Form implementation generated from reading ui file './gui/widgets/quiz.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -62,5 +62,5 @@ class Ui_Quiz(object):
     def retranslateUi(self, Quiz):
         _translate = QtCore.QCoreApplication.translate
         Quiz.setWindowTitle(_translate("Quiz", "Quiz"))
-        self.pushButton.setText(_translate("Quiz", "Пройти тест"))
+        self.pushButton.setText(_translate("Quiz", "Открыть тест"))
 import src_rc

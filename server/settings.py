@@ -1,8 +1,9 @@
 from pydantic import BaseSettings, PostgresDsn
 
 
-class Config(BaseSettings):
+class Settings(BaseSettings):
     database: PostgresDsn
+    secret: str
 
 
-config = Config()
+settings = Settings()

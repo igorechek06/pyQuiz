@@ -1,49 +1,51 @@
-from sqlalchemy import (
-    JSON,
-    Boolean,
-    Column,
-    ForeignKey,
-    Integer,
-    MetaData,
-    Text,
-    create_engine,
+from sqlalchemy import JSON, ForeignKey, create_engine
+from sqlalchemy.orm import (
+    DeclarativeBase,
+    Mapped,
+    Session,
+    mapped_column,
+    relationship,
+    sessionmaker,
 )
-from sqlalchemy.orm import registry
-from sqlalchemy.orm.decl_api import DeclarativeMeta
-from sqlalchemy.orm.session import sessionmaker
 
-import models as m
-from config import config
+from settings import settings
 
-engine = create_engine(config.database)
-meta = MetaData(engine)
-session = sessionmaker(engine)
-mapper = registry(meta)
+engine = create_engine(settings.database)
+session = sessionmaker(engine, Session)
 
 
-class Base(metaclass=DeclarativeMeta):
-    __abstract__ = True
+class Base(DeclarativeBase):
+    pass
 
-    registry = mapper
-    metadata = meta
 
-    __init__ = mapper.constructor
+class User(Base):
+    __tablename__ = "users"
+    id: Mapped[int] = mapped_column(primary_key=True)
+    username: Mapped[str] = mapped_column(unique=True)
+    password: Mapped[str]
+    salt: Mapped[str]
 
 
 class Quiz(Base):
     __tablename__ = "quizzes"
-    id = Column(Integer, primary_key=True)
-    label = Column(Text)
-    hidden = Column(Boolean, default=True)
-    image_url = Column(Text, default=None, nullable=True)
-    questions = Column(JSON, default=[])
+    id: Mapped[int] = mapped_column(primary_key=True)
+    owner_id: Mapped[int] = mapped_column(ForeignKey(User.id))
+    label: Mapped[str]
+    image_url: Mapped[str | None]
+    questions: Mapped[list] = mapped_column(JSON)
+
+    owner: Mapped[User] = relationship(User)
 
 
-class Answers(Base):
+class Answer(Base):
     __tablename__ = "answers"
-    id = Column(Integer, primary_key=True)
-    quiz_id = ForeignKey(Quiz.id)
-    answers = Column(JSON, default=[])
+    id: Mapped[int] = mapped_column(primary_key=True)
+    quiz_id: Mapped[int] = mapped_column(ForeignKey(Quiz.id))
+    answerer_id: Mapped[int] = mapped_column(ForeignKey(User.id))
+    answers: Mapped[list] = mapped_column(JSON)
+
+    quiz: Mapped[Quiz] = relationship(Quiz)
+    answerer: Mapped[User] = relationship(User)
 
 
-Base.metadata.create_all()
+Base.metadata.create_all(engine)

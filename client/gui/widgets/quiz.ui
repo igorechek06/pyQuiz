@@ -84,7 +84,7 @@
    <item>
     <widget class="QPushButton" name="pushButton">
      <property name="text">
-      <string>Пройти тест</string>
+      <string>Открыть тест</string>
      </property>
      <property name="icon">
       <iconset resource="../../src.qrc">

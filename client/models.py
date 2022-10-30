@@ -4,6 +4,11 @@ from enum import Enum, auto
 from pydantic import BaseModel
 
 
+class User(BaseModel):
+    id: int
+    username: str
+
+
 class FormType(Enum):
     TEXT = auto()
     INTEGER = auto()
@@ -81,15 +86,26 @@ class RadioForm(BaseForm):
     default: bool = False
 
 
+class Forms(Enum):
+    TEXT = TextForm
+    INTEGER = IntegerForm
+    FLOAT = FloatForm
+    TIME = TimeForm
+    DATE = DateForm
+    DATETIME = DatetimeForm
+    CHECKBOX = CheckboxForm
+    RADIO = RadioForm
+
+
 class Question(BaseModel):
     title: str
-    forms: list[BaseForm]
+    forms: list[Forms] = []
 
 
 class Quiz(BaseModel):
-    id: int | None
+    id: int
+    owner: User
     label: str
-    hidden: bool = False
     image_url: str | None = None
     questions: list[Question] = []
 
@@ -139,7 +155,18 @@ class RadioAnswer(BaseAnswer):
     value: bool = False
 
 
+class Answer(Enum):
+    TEXT = TextAnswer
+    INTEGER = IntegerAnswer
+    FLOAT = FloatAnswer
+    TIME = TimeAnswer
+    DATE = DateAnswer
+    DATETIME = DatetimeAnswer
+    CHECKBOX = CheckboxAnswer
+
+
 class Answers(BaseModel):
-    id: int | None
-    quiz_id: int
-    answers: list[BaseAnswer] = []
+    id: int
+    quiz: Quiz
+    answerer: User
+    answers: list[Answer] = []
