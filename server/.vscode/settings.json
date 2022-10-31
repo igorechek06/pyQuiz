@@ -4,5 +4,12 @@
     "**/.venv": true,
     "**/__pycache__": true
   },
-  "cSpell.words": ["fastapi", "ormar", "pydantic", "sessionmaker", "sqlalchemy"]
+  "cSpell.words": [
+    "fastapi",
+    "ondelete",
+    "ormar",
+    "pydantic",
+    "sessionmaker",
+    "sqlalchemy"
+  ]
 }

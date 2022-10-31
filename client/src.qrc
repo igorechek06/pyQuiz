@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="src">
+    <file>src/edit.png</file>
     <file>src/play.png</file>
     <file>src/no-file.png</file>
     <file>src/wait-file.png</file>

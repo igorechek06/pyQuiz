@@ -1,6 +1,6 @@
 from typing import Callable
 
-from PyQt5 import QtCore, QtWidgets
+from PyQt5 import QtWidgets
 
 import gui
 import models as m
@@ -8,13 +8,13 @@ from api import user
 
 
 class AuthDialog(QtWidgets.QDialog):
-    ui: gui.dialogs.login.Ui_AuthDialog
+    ui: gui.dialogs.auth.Ui_AuthDialog
     token: str | None
     user: m.User | None
 
     def __init__(self, parent: QtWidgets.QWidget) -> None:
         super().__init__(parent)
-        self.ui = gui.dialogs.login.Ui_AuthDialog()
+        self.ui = gui.dialogs.auth.Ui_AuthDialog()
         self.ui.setupUi(self)
         self.token = None
         self.user = None
@@ -38,21 +38,34 @@ class AuthDialog(QtWidgets.QDialog):
                 ]
             )
         )
+        self.ui.registerButton.clicked.connect(self.register_button)
 
     def login_button(self) -> None:
         username = self.ui.loginUsernameField.text()
         password = self.ui.loginPasswordField.text()
-        try:
-            self.token = user.login(username, password)
-            self.user = user.me(self.token)
-            self.close()
-        except Exception:
+
+        self.token = user.login(username, password)
+        self.user = user.me(self.token)
+        self.close()
+
+    def register_button(self) -> None:
+        username = self.ui.registerUsernameField.text()
+        password = self.ui.registerPasswordField.text()
+
+        if password != self.ui.registerRepeatPasswordField.text():
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
                 "Ошибка авторизации",
-                "Пароль или логин неверные",
+                "Пароли не совпадают",
                 QtWidgets.QMessageBox.Close,
             ).exec()
+        else:
+            user.register(username, password)
+            self.ui.registerUsernameField.clear()
+            self.ui.registerPasswordField.clear()
+            self.ui.registerRepeatPasswordField.clear()
+            self.ui.registerShowPasswordCheckbox.setChecked(False)
+            self.ui.authTabWidget.setCurrentIndex(0)
 
     def show_password(self, fields: list[QtWidgets.QLineEdit]) -> Callable[[bool], None]:
         def _show_password(show: bool) -> None:

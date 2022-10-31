@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './gui/dialogs/login.ui'
+# Form implementation generated from reading ui file './gui/dialogs/auth.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.7
 #
@@ -19,8 +19,8 @@ class Ui_AuthDialog(object):
         AuthDialog.setMaximumSize(QtCore.QSize(400, 300))
         self.verticalLayout = QtWidgets.QVBoxLayout(AuthDialog)
         self.verticalLayout.setObjectName("verticalLayout")
-        self.LoginRegisterTabWidget = QtWidgets.QTabWidget(AuthDialog)
-        self.LoginRegisterTabWidget.setObjectName("LoginRegisterTabWidget")
+        self.authTabWidget = QtWidgets.QTabWidget(AuthDialog)
+        self.authTabWidget.setObjectName("authTabWidget")
         self.loginLayout = QtWidgets.QWidget()
         self.loginLayout.setObjectName("loginLayout")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.loginLayout)
@@ -38,9 +38,10 @@ class Ui_AuthDialog(object):
         spacerItem = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_2.addItem(spacerItem)
         self.loginButton = QtWidgets.QPushButton(self.loginLayout)
+        self.loginButton.setAutoDefault(False)
         self.loginButton.setObjectName("loginButton")
         self.verticalLayout_2.addWidget(self.loginButton)
-        self.LoginRegisterTabWidget.addTab(self.loginLayout, "")
+        self.authTabWidget.addTab(self.loginLayout, "")
         self.registerLayout = QtWidgets.QWidget()
         self.registerLayout.setObjectName("registerLayout")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.registerLayout)
@@ -62,13 +63,14 @@ class Ui_AuthDialog(object):
         spacerItem1 = QtWidgets.QSpacerItem(20, 40, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
         self.verticalLayout_3.addItem(spacerItem1)
         self.registerButton = QtWidgets.QPushButton(self.registerLayout)
+        self.registerButton.setAutoDefault(False)
         self.registerButton.setObjectName("registerButton")
         self.verticalLayout_3.addWidget(self.registerButton)
-        self.LoginRegisterTabWidget.addTab(self.registerLayout, "")
-        self.verticalLayout.addWidget(self.LoginRegisterTabWidget)
+        self.authTabWidget.addTab(self.registerLayout, "")
+        self.verticalLayout.addWidget(self.authTabWidget)
 
         self.retranslateUi(AuthDialog)
-        self.LoginRegisterTabWidget.setCurrentIndex(0)
+        self.authTabWidget.setCurrentIndex(0)
         self.loginUsernameField.returnPressed.connect(self.loginPasswordField.setFocus) # type: ignore
         self.registerUsernameField.returnPressed.connect(self.registerPasswordField.setFocus) # type: ignore
         self.registerPasswordField.returnPressed.connect(self.registerRepeatPasswordField.setFocus) # type: ignore
@@ -81,10 +83,10 @@ class Ui_AuthDialog(object):
         self.loginPasswordField.setPlaceholderText(_translate("AuthDialog", "Пароль"))
         self.loginShowPasswordCheckbox.setText(_translate("AuthDialog", "Показать пароль"))
         self.loginButton.setText(_translate("AuthDialog", "Войти"))
-        self.LoginRegisterTabWidget.setTabText(self.LoginRegisterTabWidget.indexOf(self.loginLayout), _translate("AuthDialog", "Вход"))
+        self.authTabWidget.setTabText(self.authTabWidget.indexOf(self.loginLayout), _translate("AuthDialog", "Вход"))
         self.registerUsernameField.setPlaceholderText(_translate("AuthDialog", "Логин"))
         self.registerPasswordField.setPlaceholderText(_translate("AuthDialog", "Пароль"))
         self.registerRepeatPasswordField.setPlaceholderText(_translate("AuthDialog", "Повторите пароль"))
         self.registerShowPasswordCheckbox.setText(_translate("AuthDialog", "Показать пароль"))
         self.registerButton.setText(_translate("AuthDialog", "Зарегестрироваться"))
-        self.LoginRegisterTabWidget.setTabText(self.LoginRegisterTabWidget.indexOf(self.registerLayout), _translate("AuthDialog", "Регистрация"))
+        self.authTabWidget.setTabText(self.authTabWidget.indexOf(self.registerLayout), _translate("AuthDialog", "Регистрация"))

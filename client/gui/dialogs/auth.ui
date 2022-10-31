@@ -27,7 +27,7 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="QTabWidget" name="LoginRegisterTabWidget">
+    <widget class="QTabWidget" name="authTabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
@@ -77,6 +77,9 @@
         <widget class="QPushButton" name="loginButton">
          <property name="text">
           <string>Войти</string>
+         </property>
+         <property name="autoDefault">
+          <bool>false</bool>
          </property>
         </widget>
        </item>
@@ -139,6 +142,9 @@
          <property name="text">
           <string>Зарегестрироваться</string>
          </property>
+         <property name="autoDefault">
+          <bool>false</bool>
+         </property>
         </widget>
        </item>
       </layout>
@@ -172,12 +178,12 @@
    <slot>setFocus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>57</x>
-     <y>63</y>
+     <x>67</x>
+     <y>45</y>
     </hint>
     <hint type="destinationlabel">
-     <x>56</x>
-     <y>93</y>
+     <x>66</x>
+     <y>87</y>
     </hint>
    </hints>
   </connection>
@@ -188,12 +194,12 @@
    <slot>setFocus()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>93</x>
-     <y>101</y>
+     <x>103</x>
+     <y>87</y>
     </hint>
     <hint type="destinationlabel">
-     <x>84</x>
-     <y>135</y>
+     <x>94</x>
+     <y>129</y>
     </hint>
    </hints>
   </connection>

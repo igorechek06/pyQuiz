@@ -9,7 +9,7 @@ import utils
 root = APIRouter(prefix="/quiz")
 
 
-@root.get("/get")
+@root.get("/get/{id}")
 async def get(id: int) -> m.Quiz | None:
     with db.session.begin() as session:
         quiz = session.get(db.Quiz, id)

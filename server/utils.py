@@ -19,7 +19,10 @@ def auth(request: Request) -> db.User:
         if user is None:
             raise HTTPException(401, "Token is invalid")
         else:
-            jwt.decode(token, settings.secret + user.password, algorithms=["HS256"])
+            try:
+                jwt.decode(token, settings.secret + user.password, algorithms=["HS256"])
+            except jwt.exceptions.InvalidSignatureError:
+                raise HTTPException(401, "Token is invalid")
             session.expunge(user)
             return user
 

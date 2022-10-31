@@ -1,28 +1,34 @@
 import sys
 from math import ceil
 
+import keyring
 from PyQt5 import QtCore, QtWidgets
 
 import dialogs
 import gui
 import models as m
 import widgets
-from api import quiz
+from api import quiz, user
 
 
 class MainWindow(QtWidgets.QMainWindow):
     ui: gui.main_menu.Ui_MainMenu
     quizzes: list[m.Quiz]
-    token: str
-    user: m.User
+    token: str | None
+    user: m.User | None
 
     update_ui = QtCore.pyqtSignal()
 
-    def __init__(self) -> None:
+    def __init__(self, token: str | None) -> None:
         super().__init__()
         self.ui = gui.main_menu.Ui_MainMenu()
         self.ui.setupUi(self)
         self.quizzes = []
+        self.token = token
+        if self.token is not None:
+            self.user = user.me(self.token)
+        else:
+            self.user = None
 
         self.ui.authButton.clicked.connect(self.account)
         self.ui.searchButton.clicked.connect(self.search)
@@ -30,12 +36,23 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_ui.connect(self._update_ui)
 
     def account(self) -> None:
-        login = dialogs.login.AuthDialog(self)
-        login.exec()
+        if self.token is not None and self.user is not None:
+            account = dialogs.account.AccountDialog(self, self.token, self.user)
+            account.exec()
+            self.token = account.token
+            self.user = account.user
+        else:
+            auth = dialogs.auth.AuthDialog(self)
+            auth.exec()
+            self.token = auth.token
+            self.user = auth.user
 
-        if login.token is not None and login.user is not None:
-            self.token = login.token
-            self.user = login.user
+        if self.token is not None:
+            keyring.set_password("pyquiz", "token", self.token)
+        else:
+            keyring.delete_password("pyquiz", "token")
+
+        self.page()
 
     def search(self) -> None:
         self.ui.pageSelectorField.setValue(1)
@@ -63,12 +80,23 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.quizzesLayout.layout().itemAt(i).widget().deleteLater()
 
         for quiz in self.quizzes:
-            self.ui.quizzesLayout.layout().addWidget(widgets.quiz.Quiz(self, quiz))
+            self.ui.quizzesLayout.layout().addWidget(
+                widgets.quiz.Quiz(
+                    parent=self,
+                    quiz=quiz,
+                    user=self.user,
+                )
+            )
+
+        if self.user is not None:
+            self.ui.authButton.setText(self.user.username)
+        else:
+            self.ui.authButton.setText("Авторизоваться")
 
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow()
+    window = MainWindow(keyring.get_password("pyquiz", "token"))
     window.show()
     window.page()
     app.exec()

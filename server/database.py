@@ -29,7 +29,7 @@ class User(Base):
 class Quiz(Base):
     __tablename__ = "quizzes"
     id: Mapped[int] = mapped_column(primary_key=True)
-    owner_id: Mapped[int] = mapped_column(ForeignKey(User.id))
+    owner_id: Mapped[int] = mapped_column(ForeignKey(User.id, ondelete="CASCADE"))
     label: Mapped[str]
     image_url: Mapped[str | None]
     questions: Mapped[list] = mapped_column(JSON)
@@ -40,8 +40,8 @@ class Quiz(Base):
 class Answer(Base):
     __tablename__ = "answers"
     id: Mapped[int] = mapped_column(primary_key=True)
-    quiz_id: Mapped[int] = mapped_column(ForeignKey(Quiz.id))
-    answerer_id: Mapped[int] = mapped_column(ForeignKey(User.id))
+    quiz_id: Mapped[int] = mapped_column(ForeignKey(Quiz.id, ondelete="CASCADE"))
+    answerer_id: Mapped[int] = mapped_column(ForeignKey(User.id, ondelete="CASCADE"))
     answers: Mapped[list] = mapped_column(JSON)
 
     quiz: Mapped[Quiz] = relationship(Quiz)

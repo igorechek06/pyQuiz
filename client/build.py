@@ -24,7 +24,7 @@ def compile(root: str = "./") -> None:
                     init.append(name.removesuffix(".ui"))
 
     with open(join(root, "__init__.py"), "w") as py:
-        py.write("\n".join(f"from . import {i}" for i in init))
+        py.write("\n".join([f"from . import {i}" for i in init]))
 
 
 if __name__ == "__main__":
