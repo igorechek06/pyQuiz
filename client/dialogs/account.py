@@ -39,7 +39,7 @@ class AccountDialog(QtWidgets.QDialog):
         if (
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Information,
-                "Подтверждение",
+                "Confirmation",
                 "Вы точно хотите выйти ?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
             ).exec()
@@ -54,7 +54,7 @@ class AccountDialog(QtWidgets.QDialog):
         if (
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
-                "Подтверждение",
+                "Confirmation",
                 "Вы точно хотите удалить аккаунт ?",
                 QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
             ).exec()
@@ -79,7 +79,7 @@ class AccountDialog(QtWidgets.QDialog):
             if password != self.ui.repeatPasswordField.text():
                 QtWidgets.QMessageBox(
                     QtWidgets.QMessageBox.Icon.Critical,
-                    "Ошибка авторизации",
+                    "Error",
                     "Пароли не совпадают",
                     QtWidgets.QMessageBox.Close,
                 ).exec()

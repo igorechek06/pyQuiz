@@ -1,8 +1,11 @@
 import sys
 from math import ceil
+from traceback import print_stack
+from types import TracebackType
 
 import keyring
 from PyQt5 import QtCore, QtWidgets
+from requests import ConnectionError, HTTPError
 
 import dialogs
 import gui
@@ -21,12 +24,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def __init__(self, token: str | None) -> None:
         super().__init__()
+        sys.excepthook = self.exceptions_handler
+
         self.ui = gui.main_menu.Ui_MainMenu()
         self.ui.setupUi(self)
         self.quizzes = []
         self.token = token
         if self.token is not None:
-            self.user = user.me(self.token)
+            try:
+                self.user = user.me(self.token)
+            except HTTPError:
+                self.user = None
+                keyring.delete_password("pyquiz", "token")
+            except ConnectionError:
+                self.user = None
         else:
             self.user = None
 
@@ -34,6 +45,30 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.searchButton.clicked.connect(self.search)
         self.ui.pageSelectorField.valueChanged.connect(self.page)
         self.update_ui.connect(self._update_ui)
+
+    def exceptions_handler(
+        self,
+        cls: type[BaseException],
+        exception: BaseException,
+        traceback: TracebackType | None,
+    ) -> None:
+        if isinstance(exception, HTTPError):
+            message = exception.args[1]
+            QtWidgets.QMessageBox(
+                QtWidgets.QMessageBox.Icon.Critical,
+                "Error",
+                message,
+                QtWidgets.QMessageBox.Close,
+            ).exec()
+        elif isinstance(exception, ConnectionError):
+            QtWidgets.QMessageBox(
+                QtWidgets.QMessageBox.Icon.Critical,
+                "Error",
+                "Нет подключения к серверу",
+                QtWidgets.QMessageBox.Close,
+            ).exec()
+        else:
+            print_stack()
 
     def account(self) -> None:
         if self.token is not None and self.user is not None:
@@ -49,10 +84,11 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if self.token is not None:
             keyring.set_password("pyquiz", "token", self.token)
-        else:
+        elif keyring.get_password("pyquiz", "password") is not None:
             keyring.delete_password("pyquiz", "token")
 
-        self.page()
+        if self.token is not None and self.user is not None:
+            self.page()
 
     def search(self) -> None:
         self.ui.pageSelectorField.setValue(1)

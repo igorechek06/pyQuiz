@@ -4,5 +4,12 @@
     "**/.venv": true,
     "**/__pycache__": true
   },
-  "cSpell.words": ["Pixmap", "pydantic", "pyqt", "pyquiz", "toqpixmap"]
+  "cSpell.words": [
+    "excepthook",
+    "Pixmap",
+    "pydantic",
+    "pyqt",
+    "pyquiz",
+    "toqpixmap"
+  ]
 }

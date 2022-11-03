@@ -16,14 +16,19 @@ async def register(request: Request) -> None:
     data = await request.json()
 
     username = data["username"]
+    password = data["password"]
+
+    if not username:
+        raise HTTPException(400, "Имя не может быть пустым")
+    if not password:
+        raise HTTPException(403, "Пароль не может быть пустым")
+
     salt = secrets.token_hex(8)
-    password = utils.hash(data["password"], salt)
+    password = utils.hash(password, salt)
 
     with db.session.begin() as session:
         if session.query(db.User).filter(db.User.username == username).count() > 0:
-            raise HTTPException(403, "Username already exists")
-        if password == "":
-            raise HTTPException(403, "Password must not be empty")
+            raise HTTPException(403, "Имя занято другим пользователем")
 
         session.add(
             db.User(
@@ -45,12 +50,12 @@ async def login(request: Request) -> str:
             .one_or_none()
         )
         if user is None:
-            raise HTTPException(401, "Wrong username or password")
+            raise HTTPException(401, "Неверное имя пользователя или пароль")
 
         if user.password == utils.hash(data["password"], user.salt):
             return jwt.encode({"sub": user.id}, settings.secret + user.password)
         else:
-            raise HTTPException(401, "Wrong username or password")
+            raise HTTPException(401, "Неверное имя пользователя или пароль")
 
 
 @root.get("/get/{id}")
@@ -83,30 +88,33 @@ async def delete(request: Request) -> None:
         session.delete(user)
 
 
-@root.put("/password")
-async def password(request: Request) -> None:
-    user = utils.auth(request)
-    data = await request.json()
-    password = data["password"]
-
-    if password == "":
-        raise HTTPException(400, "Password must not be empty")
-
-    with db.session.begin() as session:
-        session.add(user)
-        user.salt = secrets.token_hex(8)
-        user.password = utils.hash(password, user.salt)
-
-
 @root.put("/username")
 async def username(request: Request) -> None:
     user = utils.auth(request)
     data = await request.json()
     username = data["username"]
 
+    if not username:
+        raise HTTPException(400, "Имя не может быть пустым")
+
     with db.session.begin() as session:
         if session.query(db.User).filter(db.User.username == username).count() > 0:
-            raise HTTPException(403, "Username already exists")
+            raise HTTPException(403, "Имя занято другим пользователем")
 
         session.add(user)
         user.username = username
+
+
+@root.put("/password")
+async def password(request: Request) -> None:
+    user = utils.auth(request)
+    data = await request.json()
+    password = data["password"]
+
+    if not password:
+        raise HTTPException(400, "Пароль не может быть пустым")
+
+    with db.session.begin() as session:
+        session.add(user)
+        user.salt = secrets.token_hex(8)
+        user.password = utils.hash(password, user.salt)
