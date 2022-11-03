@@ -78,6 +78,10 @@
          <property name="text">
           <string>Войти</string>
          </property>
+         <property name="icon">
+          <iconset resource="../../src.qrc">
+           <normaloff>:/src/src/login.png</normaloff>:/src/src/login.png</iconset>
+         </property>
          <property name="autoDefault">
           <bool>false</bool>
          </property>
@@ -142,6 +146,10 @@
          <property name="text">
           <string>Зарегестрироваться</string>
          </property>
+         <property name="icon">
+          <iconset resource="../../src.qrc">
+           <normaloff>:/src/src/register.png</normaloff>:/src/src/register.png</iconset>
+         </property>
          <property name="autoDefault">
           <bool>false</bool>
          </property>
@@ -153,7 +161,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../src.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>loginUsernameField</sender>

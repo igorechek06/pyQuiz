@@ -7,10 +7,8 @@ import keyring
 from PyQt5 import QtCore, QtWidgets
 from requests import ConnectionError, HTTPError
 
-import dialogs
 import gui
 import models as m
-import widgets
 from api import quiz, user
 
 
@@ -71,24 +69,14 @@ class MainWindow(QtWidgets.QMainWindow):
             print_stack()
 
     def account(self) -> None:
+        import dialogs
+
         if self.token is not None and self.user is not None:
-            account = dialogs.account.AccountDialog(self, self.token, self.user)
+            account = dialogs.account.AccountDialog(self)
             account.exec()
-            self.token = account.token
-            self.user = account.user
         else:
             auth = dialogs.auth.AuthDialog(self)
             auth.exec()
-            self.token = auth.token
-            self.user = auth.user
-
-        if self.token is not None:
-            keyring.set_password("pyquiz", "token", self.token)
-        elif keyring.get_password("pyquiz", "password") is not None:
-            keyring.delete_password("pyquiz", "token")
-
-        if self.token is not None and self.user is not None:
-            self.page()
 
     def search(self) -> None:
         self.ui.pageSelectorField.setValue(1)
@@ -112,6 +100,8 @@ class MainWindow(QtWidgets.QMainWindow):
         QtCore.QThreadPool.globalInstance().start(_page)
 
     def _update_ui(self) -> None:
+        import widgets
+
         for i in reversed(range(self.ui.quizzesLayout.layout().count())):
             self.ui.quizzesLayout.layout().itemAt(i).widget().deleteLater()
 
@@ -120,7 +110,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 widgets.quiz.Quiz(
                     parent=self,
                     quiz=quiz,
-                    user=self.user,
                 )
             )
 
@@ -128,11 +117,3 @@ class MainWindow(QtWidgets.QMainWindow):
             self.ui.authButton.setText(self.user.username)
         else:
             self.ui.authButton.setText("Авторизоваться")
-
-
-if __name__ == "__main__":
-    app = QtWidgets.QApplication(sys.argv)
-    window = MainWindow(keyring.get_password("pyquiz", "token"))
-    window.show()
-    window.page()
-    app.exec()

@@ -7,19 +7,19 @@
     <x>0</x>
     <y>0</y>
     <width>500</width>
-    <height>208</height>
+    <height>250</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>500</width>
-    <height>208</height>
+    <height>250</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
     <width>16777215</width>
-    <height>208</height>
+    <height>250</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -71,6 +71,9 @@
          <bold>true</bold>
         </font>
        </property>
+       <property name="text">
+        <string>Quiz name</string>
+       </property>
        <property name="wordWrap">
         <bool>true</bool>
        </property>
@@ -111,6 +114,26 @@
        <property name="icon">
         <iconset resource="../../src.qrc">
          <normaloff>:/src/src/edit.png</normaloff>:/src/src/edit.png</iconset>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="deleteButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Удалить</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/delete.png</normaloff>:/src/src/delete.png</iconset>
        </property>
        <property name="autoDefault">
         <bool>false</bool>

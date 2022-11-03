@@ -1,23 +1,23 @@
 from typing import Callable
 
+import keyring
 from PyQt5 import QtWidgets
 
 import gui
 import models as m
 from api import user
+from windows.main import MainWindow
 
 
 class AuthDialog(QtWidgets.QDialog):
     ui: gui.dialogs.auth.Ui_AuthDialog
-    token: str | None
-    user: m.User | None
+    context: MainWindow
 
-    def __init__(self, parent: QtWidgets.QWidget) -> None:
+    def __init__(self, parent: MainWindow) -> None:
         super().__init__(parent)
         self.ui = gui.dialogs.auth.Ui_AuthDialog()
         self.ui.setupUi(self)
-        self.token = None
-        self.user = None
+        self.context = parent
 
         # LOGIN
         self.ui.loginShowPasswordCheckbox.toggled.connect(
@@ -44,8 +44,10 @@ class AuthDialog(QtWidgets.QDialog):
         username = self.ui.loginUsernameField.text()
         password = self.ui.loginPasswordField.text()
 
-        self.token = user.login(username, password)
-        self.user = user.me(self.token)
+        self.context.token = user.login(username, password)
+        self.context.user = user.me(self.context.token)
+        self.context.update_ui.emit()
+        keyring.set_password("pyquiz", "token", self.context.token)
         self.close()
 
     def register_button(self) -> None:

@@ -47,7 +47,7 @@
       </font>
      </property>
      <property name="text">
-      <string/>
+      <string>User name</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
@@ -125,6 +125,10 @@
        <property name="text">
         <string>Сохранить</string>
        </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/save.png</normaloff>:/src/src/save.png</iconset>
+       </property>
        <property name="autoDefault">
         <bool>false</bool>
        </property>
@@ -138,6 +142,10 @@
       <widget class="QPushButton" name="logoutButton">
        <property name="text">
         <string>Выйти</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/logout.png</normaloff>:/src/src/logout.png</iconset>
        </property>
        <property name="autoDefault">
         <bool>false</bool>
@@ -155,6 +163,10 @@
        <property name="text">
         <string>Удалить аккаунт</string>
        </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/delete.png</normaloff>:/src/src/delete.png</iconset>
+       </property>
        <property name="autoDefault">
         <bool>false</bool>
        </property>
@@ -164,7 +176,9 @@
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="../../src.qrc"/>
+ </resources>
  <connections>
   <connection>
    <sender>passwordField</sender>

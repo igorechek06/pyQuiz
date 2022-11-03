@@ -38,6 +38,10 @@
         <property name="text">
          <string>Авторизоваться</string>
         </property>
+        <property name="icon">
+         <iconset resource="../src.qrc">
+          <normaloff>:/src/src/user.png</normaloff>:/src/src/user.png</iconset>
+        </property>
         <property name="autoDefault">
          <bool>false</bool>
         </property>

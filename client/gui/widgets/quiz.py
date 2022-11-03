@@ -14,9 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Quiz(object):
     def setupUi(self, Quiz):
         Quiz.setObjectName("Quiz")
-        Quiz.resize(500, 208)
-        Quiz.setMinimumSize(QtCore.QSize(500, 208))
-        Quiz.setMaximumSize(QtCore.QSize(16777215, 208))
+        Quiz.resize(500, 250)
+        Quiz.setMinimumSize(QtCore.QSize(500, 250))
+        Quiz.setMaximumSize(QtCore.QSize(16777215, 250))
         self.verticalLayout = QtWidgets.QVBoxLayout(Quiz)
         self.verticalLayout.setObjectName("verticalLayout")
         self.headerLayout = QtWidgets.QHBoxLayout()
@@ -70,6 +70,18 @@ class Ui_Quiz(object):
         self.editButton.setAutoDefault(False)
         self.editButton.setObjectName("editButton")
         self.buttonsLayout.addWidget(self.editButton)
+        self.deleteButton = QtWidgets.QPushButton(Quiz)
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.deleteButton.sizePolicy().hasHeightForWidth())
+        self.deleteButton.setSizePolicy(sizePolicy)
+        icon2 = QtGui.QIcon()
+        icon2.addPixmap(QtGui.QPixmap(":/src/src/delete.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.deleteButton.setIcon(icon2)
+        self.deleteButton.setAutoDefault(False)
+        self.deleteButton.setObjectName("deleteButton")
+        self.buttonsLayout.addWidget(self.deleteButton)
         self.verticalLayout.addLayout(self.buttonsLayout)
 
         self.retranslateUi(Quiz)
@@ -78,6 +90,8 @@ class Ui_Quiz(object):
     def retranslateUi(self, Quiz):
         _translate = QtCore.QCoreApplication.translate
         Quiz.setWindowTitle(_translate("Quiz", "Quiz"))
+        self.label.setText(_translate("Quiz", "Quiz name"))
         self.startButton.setText(_translate("Quiz", "Открыть тест"))
         self.editButton.setText(_translate("Quiz", "Изменить"))
+        self.deleteButton.setText(_translate("Quiz", "Удалить"))
 import src_rc

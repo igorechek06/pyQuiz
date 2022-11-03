@@ -1,25 +1,24 @@
-from typing import Callable
-
+import keyring
 from PyQt5 import QtWidgets
 
 import gui
 import models as m
 from api import user
+from windows.main import MainWindow
 
 
 class AccountDialog(QtWidgets.QDialog):
     ui: gui.dialogs.account.Ui_AccountDialog
-    token: str | None
-    user: m.User | None
+    context: MainWindow
 
-    def __init__(self, parent: QtWidgets.QWidget, token: str, user: m.User) -> None:
+    def __init__(self, parent: MainWindow) -> None:
         super().__init__(parent)
         self.ui = gui.dialogs.account.Ui_AccountDialog()
         self.ui.setupUi(self)
-        self.token = token
-        self.user = user
+        self.context = parent
 
-        self.ui.usernameLabel.setText(self.user.username)
+        assert self.context.token is not None and self.context.user is not None
+        self.ui.usernameLabel.setText(self.context.user.username)
 
         self.ui.showPasswordCheckBox.toggled.connect(self.show_password)
         self.ui.logoutButton.clicked.connect(self.logout)
@@ -45,12 +44,14 @@ class AccountDialog(QtWidgets.QDialog):
             ).exec()
             == QtWidgets.QMessageBox.Yes
         ):
-            self.token = None
-            self.user = None
+            self.context.token = None
+            self.context.user = None
+            keyring.delete_password("pyquiz", "token")
+            self.context.update_ui.emit()
             self.close()
 
     def delete(self) -> None:
-        assert self.token is not None
+        assert self.context.token is not None and self.context.user is not None
         if (
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
@@ -60,21 +61,24 @@ class AccountDialog(QtWidgets.QDialog):
             ).exec()
             == QtWidgets.QMessageBox.Yes
         ):
-            user.delete(self.token)
-            self.token = None
-            self.user = None
+            user.delete(self.context.token)
+            self.context.token = None
+            self.context.user = None
+            keyring.delete_password("pyquiz", "token")
+            self.context.update_ui.emit()
             self.close()
 
     def save(self) -> None:
-        assert self.token is not None and self.user is not None
+        assert self.context.token is not None and self.context.user is not None
         username = self.ui.usernameField.text()
         password = self.ui.passwordField.text()
 
         if username != "":
-            user.username(self.token, username)
+            user.username(self.context.token, username)
             self.ui.usernameField.clear()
-            self.user.username = username
             self.ui.usernameLabel.setText(username)
+            self.context.user.username = username
+            self.context.update_ui.emit()
         if password != "" or self.ui.repeatPasswordField.text() != "":
             if password != self.ui.repeatPasswordField.text():
                 QtWidgets.QMessageBox(
@@ -85,7 +89,9 @@ class AccountDialog(QtWidgets.QDialog):
                 ).exec()
                 return
 
-            user.password(self.token, password)
-            self.token = None
-            self.user = None
+            user.password(self.context.token, password)
+            self.context.token = None
+            self.context.user = None
+            keyring.delete_password("pyquiz", "token")
+            self.context.update_ui.emit()
             self.close()

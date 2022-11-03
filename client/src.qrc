@@ -1,5 +1,11 @@
 <RCC>
   <qresource prefix="src">
+    <file>src/user.png</file>
+    <file>src/register.png</file>
+    <file>src/login.png</file>
+    <file>src/save.png</file>
+    <file>src/logout.png</file>
+    <file>src/delete.png</file>
     <file>src/edit.png</file>
     <file>src/play.png</file>
     <file>src/no-file.png</file>
