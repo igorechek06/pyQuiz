@@ -38,7 +38,7 @@ class Form(QtWidgets.QWidget):
         self.ui.labelField.setText(self.form.label)
         self.ui.typeEnum.setCurrentIndex(self.form.type.value - 1)
 
-        self.ui.labelField.textChanged.connect(self.label_changed)
+        self.ui.labelField.textChanged.connect(self.label_edited)
         self.context.ui.formTabs.tabBar().tabMoved.connect(self.form_moved)
         self.ui.typeEnum.activated.connect(self.type_changed)
         self.ui.deleteButton.clicked.connect(self.delete_button)
@@ -46,7 +46,7 @@ class Form(QtWidgets.QWidget):
         self.update_ui.connect(self._update_ui)
         self.update_ui.emit()
 
-    def label_changed(self) -> None:
+    def label_edited(self) -> None:
         self.form.label = self.ui.labelField.text()
         self.context.ui.formTabs.setTabText(
             self.context.ui.formTabs.indexOf(self),

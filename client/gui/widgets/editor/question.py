@@ -27,7 +27,7 @@ class Ui_Question(object):
         font = QtGui.QFont()
         font.setPointSize(20)
         self.titleField.setFont(font)
-        self.titleField.setAlignment(QtCore.Qt.AlignCenter)
+        self.titleField.setClearButtonEnabled(True)
         self.titleField.setObjectName("titleField")
         self.verticalLayout.addWidget(self.titleField)
         self.addButton = QtWidgets.QPushButton(Question)

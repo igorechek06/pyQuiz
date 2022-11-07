@@ -27,6 +27,7 @@ class Ui_Form(object):
         self.formLayout.setObjectName("formLayout")
         self.labelField = QtWidgets.QLineEdit(Form)
         self.labelField.setMinimumSize(QtCore.QSize(200, 0))
+        self.labelField.setClearButtonEnabled(True)
         self.labelField.setObjectName("labelField")
         self.formLayout.addWidget(self.labelField)
         self.typeEnum = QtWidgets.QComboBox(Form)

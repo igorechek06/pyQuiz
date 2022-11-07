@@ -36,7 +36,7 @@ class QuizEditor(QtWidgets.QDialog):
         self.update_ui.emit()
 
     def add_button(self) -> None:
-        question = m.Question(title="")
+        question = m.Question(title="Заголовок вопроса")
         self.quiz.questions.append(question)
         self.ui.questionTabs.setCurrentIndex(
             self.ui.questionTabs.addTab(

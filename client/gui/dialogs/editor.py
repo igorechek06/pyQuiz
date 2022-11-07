@@ -33,6 +33,7 @@ class Ui_QuizEditor(object):
         font.setPointSize(20)
         self.labelField.setFont(font)
         self.labelField.setFrame(True)
+        self.labelField.setClearButtonEnabled(True)
         self.labelField.setObjectName("labelField")
         self.quizLayout.addWidget(self.labelField)
         self.verticalLayout.addLayout(self.quizLayout)

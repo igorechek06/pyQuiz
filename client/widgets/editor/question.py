@@ -31,7 +31,7 @@ class Question(QtWidgets.QWidget):
         self.update_ui.emit()
 
     def add_button(self) -> None:
-        form = m.TextForm(label="")
+        form = m.TextForm(label="Название поля")
         self.question.forms.append(form)
         self.ui.formTabs.setCurrentIndex(
             self.ui.formTabs.addTab(
