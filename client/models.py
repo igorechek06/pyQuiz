@@ -1,5 +1,6 @@
 from datetime import date, datetime, time
-from enum import Enum, auto
+from enum import IntEnum
+from typing import Literal
 
 from pydantic import BaseModel
 
@@ -9,15 +10,15 @@ class User(BaseModel):
     username: str
 
 
-class FormType(Enum):
-    TEXT = auto()
-    INTEGER = auto()
-    FLOAT = auto()
-    TIME = auto()
-    DATE = auto()
-    DATETIME = auto()
-    CHECKBOX = auto()
-    RADIO = auto()
+class FormType(IntEnum):
+    TEXT = 1
+    INTEGER = 2
+    FLOAT = 3
+    TIME = 4
+    DATE = 5
+    DATETIME = 6
+    CHECKBOX = 7
+    RADIO = 8
 
 
 class BaseForm(BaseModel):
@@ -26,14 +27,14 @@ class BaseForm(BaseModel):
 
 
 class TextForm(BaseForm):
-    type: FormType = FormType.TEXT
+    type: Literal[FormType.TEXT] = FormType.TEXT
     default: str | None
     hint: str | None
     clear_button: bool = False
 
 
 class IntegerForm(BaseForm):
-    type: FormType = FormType.INTEGER
+    type: Literal[FormType.INTEGER] = FormType.INTEGER
     default: int = 0
     min: int = 0
     max: int = 100
@@ -42,7 +43,8 @@ class IntegerForm(BaseForm):
 
 
 class FloatForm(BaseForm):
-    type: FormType = FormType.FLOAT
+    type: Literal[FormType.FLOAT] = FormType.FLOAT
+    decimals: int = 1
     default: float = 0.0
     min: float = 0.0
     max: float = 10.0
@@ -51,55 +53,56 @@ class FloatForm(BaseForm):
 
 
 class TimeForm(BaseForm):
-    type: FormType = FormType.TIME
-    default: time = time(0, 0, 0)
-    min: time = time(0, 0, 0)
-    max: time = time(23, 59, 59)
+    type: Literal[FormType.TIME] = FormType.TIME
+    default: time = time.min
+    min: time = time.min
+    max: time = time.max
     increase_buttons: bool = True
 
 
 class DateForm(BaseForm):
-    type: FormType = FormType.DATE
-    default: date = date(1, 1, 1)
-    min: date = date(1, 1, 1)
-    max: date = date(9999, 12, 31)
+    type: Literal[FormType.DATE] = FormType.DATE
+    default: date = date.min
+    min: date = date.min
+    max: date = date.max
     increase_buttons: bool = True
     calendar_button: bool = False
 
 
 class DatetimeForm(BaseForm):
-    type: FormType = FormType.DATETIME
-    default: datetime = datetime(1, 1, 1, 0, 0, 0)
-    min: datetime = datetime(1, 1, 1, 0, 0, 0)
-    max: datetime = datetime(9999, 12, 31, 23, 59, 59)
+    type: Literal[FormType.DATETIME] = FormType.DATETIME
+    default: datetime = datetime.min
+    min: datetime = datetime.min
+    max: datetime = datetime.max
     increase_buttons: bool = True
     calendar_button: bool = False
 
 
 class CheckboxForm(BaseForm):
-    type: FormType = FormType.CHECKBOX
+    type: Literal[FormType.CHECKBOX] = FormType.CHECKBOX
     default: bool = False
 
 
 class RadioForm(BaseForm):
-    type: FormType = FormType.RADIO
+    type: Literal[FormType.RADIO] = FormType.RADIO
     default: bool = False
 
 
-class Forms(Enum):
-    TEXT = TextForm
-    INTEGER = IntegerForm
-    FLOAT = FloatForm
-    TIME = TimeForm
-    DATE = DateForm
-    DATETIME = DatetimeForm
-    CHECKBOX = CheckboxForm
-    RADIO = RadioForm
+Form = (
+    TextForm
+    | IntegerForm
+    | FloatForm
+    | TimeForm
+    | DateForm
+    | DatetimeForm
+    | CheckboxForm
+    | RadioForm
+)
 
 
 class Question(BaseModel):
     title: str
-    forms: list[Forms] = []
+    forms: list[Form] = []
 
 
 class Quiz(BaseModel):
@@ -155,14 +158,16 @@ class RadioAnswer(BaseAnswer):
     value: bool = False
 
 
-class Answer(Enum):
-    TEXT = TextAnswer
-    INTEGER = IntegerAnswer
-    FLOAT = FloatAnswer
-    TIME = TimeAnswer
-    DATE = DateAnswer
-    DATETIME = DatetimeAnswer
-    CHECKBOX = CheckboxAnswer
+Answer = (
+    TextAnswer
+    | IntegerAnswer
+    | FloatAnswer
+    | TimeAnswer
+    | DateAnswer
+    | DatetimeAnswer
+    | CheckboxAnswer
+    | RadioAnswer
+)
 
 
 class Answers(BaseModel):

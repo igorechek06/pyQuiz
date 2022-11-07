@@ -1,15 +1,18 @@
 import sys
 from math import ceil
-from traceback import print_stack
+from traceback import print_exception
 from types import TracebackType
 
 import keyring
+from httpx import HTTPError
 from PyQt5 import QtCore, QtWidgets
-from requests import ConnectionError, HTTPError
 
+import dialogs
 import gui
 import models as m
-from api import quiz, user
+import widgets
+from api import quiz as q
+from api import user as u
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -21,28 +24,28 @@ class MainWindow(QtWidgets.QMainWindow):
     update_ui = QtCore.pyqtSignal()
 
     def __init__(self, token: str | None) -> None:
-        super().__init__()
         sys.excepthook = self.exceptions_handler
-
+        super().__init__()
         self.ui = gui.main_menu.Ui_MainMenu()
         self.ui.setupUi(self)
         self.quizzes = []
         self.token = token
         if self.token is not None:
             try:
-                self.user = user.me(self.token)
+                self.user = u.me(self.token)
             except HTTPError:
                 self.user = None
                 keyring.delete_password("pyquiz", "token")
-            except ConnectionError:
-                self.user = None
         else:
             self.user = None
 
-        self.ui.authButton.clicked.connect(self.account)
-        self.ui.searchButton.clicked.connect(self.search)
-        self.ui.pageSelectorField.valueChanged.connect(self.page)
+        self.ui.authButton.clicked.connect(self.auth_button)
+        self.ui.searchButton.clicked.connect(self.search_button)
+        self.ui.createQuizButton.clicked.connect(self.create_button)
+        self.ui.pageSelectorField.valueChanged.connect(self.update_page)
+
         self.update_ui.connect(self._update_ui)
+        self.update_ui.emit()
 
     def exceptions_handler(
         self,
@@ -50,27 +53,25 @@ class MainWindow(QtWidgets.QMainWindow):
         exception: BaseException,
         traceback: TracebackType | None,
     ) -> None:
+        print_exception(exception)
         if isinstance(exception, HTTPError):
-            message = exception.args[1]
+            message = exception.args[0]
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
                 "Error",
                 message,
                 QtWidgets.QMessageBox.Close,
             ).exec()
-        elif isinstance(exception, ConnectionError):
+        elif isinstance(exception, AssertionError):
+            message = exception.args[0]
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
                 "Error",
-                "Нет подключения к серверу",
+                message,
                 QtWidgets.QMessageBox.Close,
             ).exec()
-        else:
-            print_stack()
 
-    def account(self) -> None:
-        import dialogs
-
+    def auth_button(self) -> None:
         if self.token is not None and self.user is not None:
             account = dialogs.account.AccountDialog(self)
             account.exec()
@@ -78,21 +79,31 @@ class MainWindow(QtWidgets.QMainWindow):
             auth = dialogs.auth.AuthDialog(self)
             auth.exec()
 
-    def search(self) -> None:
+    def search_button(self) -> None:
         self.ui.pageSelectorField.setValue(1)
-        self.page()
+        self.update_page()
 
-    def page(self) -> None:
+    def create_button(self) -> None:
+        if self.token is None and self.user is None:
+            self.auth_button()
+        if self.token is not None and self.user is not None:
+            quiz = q.add(self.token, q.Quiz(label="Новый тест"))
+            self.quizzes.insert(0, quiz)
+            widget = widgets.quiz.Quiz(self, quiz)
+            self.ui.quizzesLayout.layout().insertWidget(0, widget)
+            widget.edit_quiz()
+
+    def update_page(self) -> None:
         def _page() -> None:
-            search = self.ui.searchField.text()
+            search = self.ui.searchField.text() or None
 
-            self.ui.pageSelectorField.setMaximum(ceil((quiz.count(search) + 1) / 10))
+            self.ui.pageSelectorField.setMaximum(max(1, ceil(q.count(search) / 10)))
             self.ui.pageSelectorField.setSuffix(f"/{self.ui.pageSelectorField.maximum()}")
 
-            self.quizzes = quiz.find(
-                search,
+            self.quizzes = q.find(
                 (self.ui.pageSelectorField.value() - 1) * 10,
                 10,
+                search,
             )
 
             self.update_ui.emit()
@@ -100,20 +111,13 @@ class MainWindow(QtWidgets.QMainWindow):
         QtCore.QThreadPool.globalInstance().start(_page)
 
     def _update_ui(self) -> None:
-        import widgets
-
         for i in reversed(range(self.ui.quizzesLayout.layout().count())):
             self.ui.quizzesLayout.layout().itemAt(i).widget().deleteLater()
 
         for quiz in self.quizzes:
-            self.ui.quizzesLayout.layout().addWidget(
-                widgets.quiz.Quiz(
-                    parent=self,
-                    quiz=quiz,
-                )
-            )
+            self.ui.quizzesLayout.layout().addWidget(widgets.quiz.Quiz(self, quiz))
 
-        if self.user is not None:
+        if self.token is not None and self.user is not None:
             self.ui.authButton.setText(self.user.username)
         else:
             self.ui.authButton.setText("Авторизоваться")

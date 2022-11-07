@@ -1,15 +1,22 @@
 from typing import Any
+from urllib.parse import quote, urlencode
 
-import requests
-from PyQt5.QtWidgets import QMessageBox
+import httpx
 
 
-def response(response: requests.Response) -> Any:
+def encode(value: dict[str, Any]) -> str:
+    return urlencode(
+        dict(filter(lambda i: i[1] is not None, value.items())),
+        quote_via=quote,
+    )
+
+
+def response(response: httpx.Response) -> Any:
     status = response.status_code
 
     if 200 <= status <= 299:
         return response.json()
     elif 400 <= status <= 499:
-        raise requests.HTTPError(status, response.json()["message"])
+        raise httpx.HTTPError(response.json()["detail"])
     else:
-        raise requests.HTTPError(status, "Неизвестная ошибка")
+        raise httpx.HTTPError("Неизвестная ошибка")

@@ -5,13 +5,5 @@ app = FastAPI()
 
 
 @app.exception_handler(Exception)
-@app.exception_handler(HTTPException)
 async def exception_handler(request: Request, exception: Exception) -> Response:
-    if isinstance(exception, HTTPException):
-        message = exception.detail
-        status = exception.status_code
-    else:
-        message = ", ".join(map(str, exception.args))
-        status = 400
-
-    return JSONResponse({"message": message}, status)
+    return JSONResponse({"detail": ", ".join(map(str, exception.args))}, 400)

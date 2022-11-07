@@ -7,9 +7,8 @@ import database as db
 from settings import settings
 
 
-def auth(request: Request) -> db.User:
-    token = request.headers.get("x-token", None)
-    if not token:
+def auth(token: str | None) -> db.User:
+    if token is None:
         raise HTTPException(401, "Не авторизованная сессия")
     else:
         data = jwt.decode(token, options={"verify_signature": False})

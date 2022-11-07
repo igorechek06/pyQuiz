@@ -10,9 +10,8 @@ readme = "README.md"
 python = "^3.10"
 PyQt5 = "^5.15.7"
 pydantic = "^1.10.2"
-requests = "^2.28.1"
-Pillow = "^9.2.0"
 keyring = "^23.9.3"
+httpx = "^0.23.0"
 
 [tool.poetry.group.dev.dependencies]
 mypy = "^0.982"
@@ -28,7 +27,14 @@ line-length = 90
 [tool.mypy]
 ignore_missing_imports = true
 disallow_untyped_defs = true
-exclude = ["gui"]
+
+[[tool.mypy.overrides]]
+module = "gui.*"
+disallow_untyped_defs = false
+
+[[tool.mypy.overrides]]
+module = "src_rc"
+disallow_untyped_defs = false
 
 [tool.isort]
 profile = "black"

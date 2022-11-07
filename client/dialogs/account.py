@@ -3,15 +3,15 @@ from PyQt5 import QtWidgets
 
 import gui
 import models as m
-from api import user
-from windows.main import MainWindow
+import windows
+from api import user as u
 
 
 class AccountDialog(QtWidgets.QDialog):
     ui: gui.dialogs.account.Ui_AccountDialog
-    context: MainWindow
+    context: "windows.main.MainWindow"
 
-    def __init__(self, parent: MainWindow) -> None:
+    def __init__(self, parent: "windows.main.MainWindow") -> None:
         super().__init__(parent)
         self.ui = gui.dialogs.account.Ui_AccountDialog()
         self.ui.setupUi(self)
@@ -61,11 +61,11 @@ class AccountDialog(QtWidgets.QDialog):
             ).exec()
             == QtWidgets.QMessageBox.Yes
         ):
-            user.delete(self.context.token)
+            u.delete(self.context.token)
             self.context.token = None
             self.context.user = None
             keyring.delete_password("pyquiz", "token")
-            self.context.update_ui.emit()
+            self.context.update_page()
             self.close()
 
     def save(self) -> None:
@@ -74,24 +74,18 @@ class AccountDialog(QtWidgets.QDialog):
         password = self.ui.passwordField.text()
 
         if username != "":
-            user.username(self.context.token, username)
+            u.update_username(self.context.token, u.Username(username=username))
             self.ui.usernameField.clear()
             self.ui.usernameLabel.setText(username)
             self.context.user.username = username
-            self.context.update_ui.emit()
         if password != "" or self.ui.repeatPasswordField.text() != "":
             if password != self.ui.repeatPasswordField.text():
-                QtWidgets.QMessageBox(
-                    QtWidgets.QMessageBox.Icon.Critical,
-                    "Error",
-                    "Пароли не совпадают",
-                    QtWidgets.QMessageBox.Close,
-                ).exec()
-                return
+                raise AssertionError("Пароли не совпадают")
 
-            user.password(self.context.token, password)
+            u.update_password(self.context.token, u.Password(password=password))
             self.context.token = None
             self.context.user = None
             keyring.delete_password("pyquiz", "token")
-            self.context.update_ui.emit()
-            self.close()
+
+        self.context.update_ui.emit()
+        self.close()

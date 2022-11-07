@@ -5,15 +5,15 @@ from PyQt5 import QtWidgets
 
 import gui
 import models as m
-from api import user
-from windows.main import MainWindow
+import windows
+from api import user as u
 
 
 class AuthDialog(QtWidgets.QDialog):
     ui: gui.dialogs.auth.Ui_AuthDialog
-    context: MainWindow
+    context: "windows.main.MainWindow"
 
-    def __init__(self, parent: MainWindow) -> None:
+    def __init__(self, parent: "windows.main.MainWindow") -> None:
         super().__init__(parent)
         self.ui = gui.dialogs.auth.Ui_AuthDialog()
         self.ui.setupUi(self)
@@ -44,8 +44,8 @@ class AuthDialog(QtWidgets.QDialog):
         username = self.ui.loginUsernameField.text()
         password = self.ui.loginPasswordField.text()
 
-        self.context.token = user.login(username, password)
-        self.context.user = user.me(self.context.token)
+        self.context.token = u.login(u.User(username=username, password=password))
+        self.context.user = u.me(self.context.token)
         self.context.update_ui.emit()
         keyring.set_password("pyquiz", "token", self.context.token)
         self.close()
@@ -62,7 +62,7 @@ class AuthDialog(QtWidgets.QDialog):
                 QtWidgets.QMessageBox.Close,
             ).exec()
         else:
-            user.register(username, password)
+            u.register(u.User(username=username, password=password))
             self.ui.registerUsernameField.clear()
             self.ui.registerPasswordField.clear()
             self.ui.registerRepeatPasswordField.clear()

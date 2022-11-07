@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>500</width>
-    <height>673</height>
+    <width>600</width>
+    <height>850</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>500</width>
-    <height>0</height>
+    <width>600</width>
+    <height>850</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>500</width>
+    <width>600</width>
     <height>16777215</height>
    </size>
   </property>
@@ -27,9 +27,15 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <layout class="QHBoxLayout" name="inputField">
+    <layout class="QHBoxLayout" name="quizLayout">
      <item>
-      <widget class="QLabel" name="label">
+      <widget class="QLabel" name="image">
+       <property name="minimumSize">
+        <size>
+         <width>150</width>
+         <height>150</height>
+        </size>
+       </property>
        <property name="maximumSize">
         <size>
          <width>150</width>
@@ -55,50 +61,32 @@
         <bool>true</bool>
        </property>
        <property name="placeholderText">
-        <string>Название теста</string>
+        <string>Название опроса</string>
        </property>
       </widget>
      </item>
     </layout>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout_2">
-     <item>
-      <widget class="QLineEdit" name="imageURLField">
-       <property name="minimumSize">
-        <size>
-         <width>150</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="placeholderText">
-        <string>Ссылка на изображение</string>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </item>
-   <item>
-    <widget class="QScrollArea" name="scrollArea">
-     <property name="widgetResizable">
+    <widget class="QLineEdit" name="imageURLField">
+     <property name="minimumSize">
+      <size>
+       <width>150</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="placeholderText">
+      <string>Ссылка на изображение</string>
+     </property>
+     <property name="clearButtonEnabled">
       <bool>true</bool>
      </property>
-     <widget class="QWidget" name="scrollAreaWidgetContents">
-      <property name="geometry">
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>484</width>
-        <height>367</height>
-       </rect>
-      </property>
-     </widget>
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton">
+    <widget class="QPushButton" name="addFieldButton">
      <property name="text">
-      <string>Добавить поле</string>
+      <string>Добавить вопрос</string>
      </property>
      <property name="icon">
       <iconset resource="../../src.qrc">
@@ -110,22 +98,74 @@
     </widget>
    </item>
    <item>
-    <widget class="QPushButton" name="pushButton_2">
-     <property name="text">
-      <string>Сохранить</string>
-     </property>
-     <property name="icon">
-      <iconset resource="../../src.qrc">
-       <normaloff>:/src/src/save.png</normaloff>:/src/src/save.png</iconset>
-     </property>
-     <property name="autoDefault">
-      <bool>false</bool>
+    <widget class="QTabWidget" name="questionTabs">
+     <property name="movable">
+      <bool>true</bool>
      </property>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="buttonsLayout">
+     <item>
+      <widget class="QPushButton" name="deleteButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Удалить</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/delete.png</normaloff>:/src/src/delete.png</iconset>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="cancelButton">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text">
+        <string>Отменить</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/cancel.png</normaloff>:/src/src/cancel.png</iconset>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveButton">
+       <property name="text">
+        <string>Сохранить</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/save.png</normaloff>:/src/src/save.png</iconset>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <resources>
+  <include location="../../src.qrc"/>
   <include location="../../src.qrc"/>
  </resources>
  <connections/>

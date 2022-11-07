@@ -1,65 +1,53 @@
-import requests
-from PIL import Image
+import httpx
 from PyQt5 import QtCore, QtGui, QtWidgets
 
+import dialogs
 import gui
 import models as m
-from api import quiz
-from windows.main import MainWindow
+import windows
 
 
 class Quiz(QtWidgets.QWidget):
     ui: gui.widgets.quiz.Ui_Quiz
-    context: MainWindow
+    context: "windows.main.MainWindow"
     quiz: m.Quiz
 
-    def __init__(
-        self,
-        parent: MainWindow,
-        quiz: m.Quiz,
-    ) -> None:
+    update_ui = QtCore.pyqtSignal()
+    image_updated = QtCore.pyqtSignal(QtGui.QPixmap)
+
+    def __init__(self, parent: "windows.main.MainWindow", quiz: m.Quiz) -> None:
         super().__init__(parent)
         self.ui = gui.widgets.quiz.Ui_Quiz()
         self.ui.setupUi(self)
         self.quiz = quiz
         self.context = parent
 
-        self.ui.label.setText(self.quiz.label)
-        if self.quiz.image_url is not None:
-            self.ui.image.setPixmap(QtGui.QPixmap(":/src/src/wait-file.png"))
-            QtCore.QThreadPool.globalInstance().start(self._load_image)
-        if self.context.user is None or quiz.owner.id != self.context.user.id:
-            self.ui.editButton.hide()
-            self.ui.deleteButton.hide()
-        else:
-            self.ui.deleteButton.clicked.connect(self.delete_quiz)
-            self.ui.editButton.clicked.connect(self.edit_quiz)
+        self.ui.editButton.clicked.connect(self.edit_quiz)
         self.ui.startButton.clicked.connect(self.start_quiz)
+        self.image_updated.connect(self.ui.image.setPixmap)
+
+        self.update_ui.connect(self._update_ui)
+        self.update_ui.emit()
 
     def start_quiz(self) -> None:
         pass
 
     def edit_quiz(self) -> None:
-        pass
+        editor = dialogs.editor.QuizEditor(self)
+        editor.exec()
 
-    def delete_quiz(self) -> None:
-        assert self.context.token
-        if (
-            QtWidgets.QMessageBox(
-                QtWidgets.QMessageBox.Icon.Critical,
-                "Confirmation",
-                "Вы точно хотите удалить опрос ?",
-                QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
-            ).exec()
-            == QtWidgets.QMessageBox.Yes
-        ):
-            quiz.delete(self.context.token, self.quiz.id)
-        self.context.page()
+    def _update_ui(self) -> None:
+        self.ui.label.setText(self.quiz.label)
+        if self.quiz.image_url is not None:
+            self.image_updated.emit(QtGui.QPixmap(":/src/src/wait-file.png"))
+            QtCore.QThreadPool.globalInstance().start(self._load_image)
+        else:
+            self.image_updated.emit(QtGui.QPixmap(":/src/src/no-file.png"))
+        hidden = self.context.user is None or self.quiz.owner.id != self.context.user.id
+        self.ui.editButton.setHidden(hidden)
 
     def _load_image(self) -> None:
         assert self.quiz.image_url is not None
-        try:
-            image = Image.open(requests.get(self.quiz.image_url, stream=True).raw)
-            self.ui.image.setPixmap(image.toqpixmap())
-        except Exception:
-            pass
+        image = QtGui.QPixmap()
+        image.loadFromData(httpx.get(self.quiz.image_url).content)
+        self.image_updated.emit(image)

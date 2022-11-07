@@ -1,2 +1,2 @@
-from . import form
+from . import editor
 from . import quiz

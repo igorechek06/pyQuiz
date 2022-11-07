@@ -125,5 +125,5 @@ class Ui_MainMenu(object):
         self.searchField.setPlaceholderText(_translate("MainMenu", "Имя"))
         self.searchButton.setText(_translate("MainMenu", "Найти"))
         self.pageSelectorField.setSuffix(_translate("MainMenu", "/1"))
-        self.createQuizButton.setText(_translate("MainMenu", "Создать тест"))
+        self.createQuizButton.setText(_translate("MainMenu", "Создать опрос"))
 import src_rc
