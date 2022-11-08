@@ -17,6 +17,6 @@ def response(response: httpx.Response) -> Any:
     if 200 <= status <= 299:
         return response.json()
     elif 400 <= status <= 499:
-        raise httpx.HTTPError(response.json()["detail"])
+        raise AssertionError(response.json()["detail"])
     else:
-        raise httpx.HTTPError("Неизвестная ошибка")
+        raise AssertionError("Неизвестная ошибка")

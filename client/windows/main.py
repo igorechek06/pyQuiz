@@ -4,7 +4,7 @@ from traceback import print_exception
 from types import TracebackType
 
 import keyring
-from httpx import HTTPError
+from httpx import RequestError
 from PyQt5 import QtCore, QtWidgets
 
 import dialogs
@@ -33,7 +33,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.token is not None:
             try:
                 self.user = u.me(self.token)
-            except HTTPError:
+            except AssertionError:
                 self.user = None
                 keyring.delete_password("pyquiz", "token")
         else:
@@ -53,23 +53,22 @@ class MainWindow(QtWidgets.QMainWindow):
         exception: BaseException,
         traceback: TracebackType | None,
     ) -> None:
-        print_exception(exception)
-        if isinstance(exception, HTTPError):
-            message = exception.args[0]
+        if isinstance(exception, RequestError):
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
                 "Error",
-                message,
+                "Нет подключения к серверу",
                 QtWidgets.QMessageBox.Close,
             ).exec()
         elif isinstance(exception, AssertionError):
-            message = exception.args[0]
             QtWidgets.QMessageBox(
                 QtWidgets.QMessageBox.Icon.Critical,
                 "Error",
-                message,
+                exception.args[0],
                 QtWidgets.QMessageBox.Close,
             ).exec()
+        else:
+            print_exception(exception)
 
     def auth_button(self) -> None:
         if self.token is not None and self.user is not None:
