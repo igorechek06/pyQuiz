@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="src">
+    <file>src/view.png</file>
+    <file>src/answers.png</file>
     <file>src/cancel.png</file>
     <file>src/user.png</file>
     <file>src/register.png</file>

@@ -67,6 +67,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 exception.args[0],
                 QtWidgets.QMessageBox.Close,
             ).exec()
+            self.update_page()
         else:
             print_exception(exception)
 
@@ -83,14 +84,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.update_page()
 
     def create_button(self) -> None:
-        if self.token is None and self.user is None:
+        if self.token is None:
             self.auth_button()
-        if self.token is not None and self.user is not None:
-            quiz = q.add(self.token, q.Quiz(label="Новый тест"))
-            self.quizzes.insert(0, quiz)
-            widget = widgets.quiz.Quiz(self, quiz)
-            self.ui.quizzesLayout.layout().insertWidget(0, widget)
-            widget.edit_quiz()
+        if self.token is not None:
+            editor = dialogs.editor.QuizEditor(self, self.token)
+            editor.exec()
+            self.update_page()
 
     def update_page(self) -> None:
         def _page() -> None:
@@ -103,6 +102,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 (self.ui.pageSelectorField.value() - 1) * 10,
                 10,
                 search,
+                self.token,
             )
 
             self.update_ui.emit()

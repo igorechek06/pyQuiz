@@ -18,10 +18,10 @@ class TextForm(BaseForm[forms.text.Ui_Text, m.TextForm]):
         self.ui.clearButtonCheckbox.toggled.connect(self.clear_button_updated)
 
     def default_updated(self) -> None:
-        self.model.default = self.ui.defaultField.text()
+        self.model.default = self.ui.defaultField.text() or None
 
     def hint_updated(self) -> None:
-        self.model.hint = self.ui.defaultField.text()
+        self.model.hint = self.ui.hintField.text()
 
     def clear_button_updated(self, status: bool) -> None:
         self.model.clear_button = status

@@ -110,52 +110,52 @@ class Quiz(BaseModel):
     owner: User
     label: str
     image_url: str | None = None
+    has_answers: bool = False
     questions: list[Question] = []
 
 
 class BaseAnswer(BaseModel):
-    type: FormType
-    question: int
+    form: Form
 
 
 class TextAnswer(BaseAnswer):
-    type: FormType = FormType.TEXT
-    value: str
+    form: TextForm
+    value: str | None
 
 
 class IntegerAnswer(BaseAnswer):
-    type: FormType = FormType.INTEGER
-    value: int = 0
+    form: IntegerForm
+    value: int
 
 
 class FloatAnswer(BaseAnswer):
-    type: FormType = FormType.FLOAT
-    value: float = 0.0
+    form: FloatForm
+    value: float
 
 
 class TimeAnswer(BaseAnswer):
-    type: FormType = FormType.TIME
-    value: time = time(0, 0, 0)
+    form: TimeForm
+    value: time
 
 
 class DateAnswer(BaseAnswer):
-    type: FormType = FormType.DATE
-    value: date = date(1, 1, 1)
+    form: DateForm
+    value: date
 
 
 class DatetimeAnswer(BaseAnswer):
-    type: FormType = FormType.DATETIME
-    value: datetime = datetime(1, 1, 1, 0, 0, 0)
+    form: DatetimeForm
+    value: datetime
 
 
 class CheckboxAnswer(BaseAnswer):
-    type: FormType = FormType.CHECKBOX
-    value: bool = False
+    form: CheckboxForm
+    value: bool
 
 
 class RadioAnswer(BaseAnswer):
-    type: FormType = FormType.RADIO
-    value: bool = False
+    form: RadioForm
+    value: bool
 
 
 Answer = (
@@ -170,8 +170,13 @@ Answer = (
 )
 
 
-class Answers(BaseModel):
-    id: int
-    quiz: Quiz
-    answerer: User
+class QuestionAnswers(BaseModel):
+    title: str
     answers: list[Answer] = []
+
+
+class QuizAnswers(BaseModel):
+    id: int
+    quiz_id: int
+    answerer: User
+    questions: list[QuestionAnswers] = []

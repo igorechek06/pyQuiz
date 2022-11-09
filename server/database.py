@@ -37,12 +37,12 @@ class Quiz(Base):
     owner: Mapped[User] = relationship(User)
 
 
-class Answer(Base):
+class Answers(Base):
     __tablename__ = "answers"
     id: Mapped[int] = mapped_column(primary_key=True)
     quiz_id: Mapped[int] = mapped_column(ForeignKey(Quiz.id, ondelete="CASCADE"))
     answerer_id: Mapped[int] = mapped_column(ForeignKey(User.id, ondelete="CASCADE"))
-    answers: Mapped[list] = mapped_column(JSON)
+    questions: Mapped[list] = mapped_column(JSON)
 
     quiz: Mapped[Quiz] = relationship(Quiz)
     answerer: Mapped[User] = relationship(User)

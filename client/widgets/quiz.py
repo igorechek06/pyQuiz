@@ -22,19 +22,41 @@ class Quiz(QtWidgets.QWidget):
         self.quiz = quiz
         self.context = parent
 
-        self.ui.editButton.clicked.connect(self.edit_quiz)
-        self.ui.startButton.clicked.connect(self.start_quiz)
+        self.ui.editButton.clicked.connect(self.edit_button)
+        self.ui.startButton.clicked.connect(self.start_button)
+        self.ui.answersButton.clicked.connect(self.answers_button)
         self.image_updated.connect(self.ui.image.setPixmap)
 
         self.update_ui.connect(self._update_ui)
         self.update_ui.emit()
 
-    def start_quiz(self) -> None:
-        pass
+    def start_button(self) -> None:
+        if self.context.token is None:
+            self.context.auth_button()
+        else:
+            answer = dialogs.answer.QuizAnswer(
+                self,
+                self.context.token,
+                self.quiz,
+                pixmap=self.ui.image.pixmap(),
+                image_updated=self.image_updated,
+            )
+            answer.exec()
 
-    def edit_quiz(self) -> None:
-        editor = dialogs.editor.QuizEditor(self)
+    def edit_button(self) -> None:
+        assert self.context.token
+        editor = dialogs.editor.QuizEditor(
+            self,
+            self.context.token,
+            self.quiz,
+            self.ui.image.pixmap(),
+            self.image_updated,
+        )
         editor.exec()
+
+    def answers_button(self) -> None:
+        view = dialogs.answers_view.AnswersView(self)
+        view.exec()
 
     def _update_ui(self) -> None:
         self.ui.label.setText(self.quiz.label)
@@ -43,8 +65,12 @@ class Quiz(QtWidgets.QWidget):
             QtCore.QThreadPool.globalInstance().start(self._load_image)
         else:
             self.image_updated.emit(QtGui.QPixmap(":/src/src/no-file.png"))
-        hidden = self.context.user is None or self.quiz.owner.id != self.context.user.id
-        self.ui.editButton.setHidden(hidden)
+
+        owner = (
+            self.context.user is not None and self.quiz.owner.id == self.context.user.id
+        )
+        self.ui.editButton.setHidden(not owner)
+        self.ui.answersButton.setHidden(not self.quiz.has_answers)
 
     def _load_image(self) -> None:
         assert self.quiz.image_url is not None

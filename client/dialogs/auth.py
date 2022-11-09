@@ -47,6 +47,7 @@ class AuthDialog(QtWidgets.QDialog):
         self.context.token = u.login(u.User(username=username, password=password))
         self.context.user = u.me(self.context.token)
         self.context.update_ui.emit()
+        self.context.update_page()
         keyring.set_password("pyquiz", "token", self.context.token)
         self.close()
 

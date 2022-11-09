@@ -48,6 +48,7 @@ class AccountDialog(QtWidgets.QDialog):
             self.context.user = None
             keyring.delete_password("pyquiz", "token")
             self.context.update_ui.emit()
+            self.context.update_page()
             self.close()
 
     def delete(self) -> None:

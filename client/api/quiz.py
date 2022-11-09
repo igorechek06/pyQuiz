@@ -16,12 +16,30 @@ class Quiz(BaseModel):
     questions: list[m.Question] = []
 
 
-def get(id: int) -> m.Quiz:
+def get(id: int, token: str | None = None) -> m.Quiz:
+    if token is not None:
+        headers = {"x-token": token}
+    else:
+        headers = None
     url = urljoin(settings.url, f"/quiz/get/{id}")
-    return m.Quiz.parse_obj(response(httpx.get(url)))
+    return m.Quiz.parse_obj(response(httpx.get(url, headers=headers)))
 
 
-def find(offset: int = 0, limit: int = 10, label: str | None = None) -> list[m.Quiz]:
+def answers(token: str, id: int) -> list[m.QuizAnswers]:
+    headers = {"x-token": token}
+    url = urljoin(settings.url, f"/quiz/answers/{id}")
+    return [
+        m.QuizAnswers.parse_obj(qa)
+        for qa in list(response(httpx.get(url, headers=headers)))
+    ]
+
+
+def find(
+    offset: int = 0,
+    limit: int = 10,
+    label: str | None = None,
+    token: str | None = None,
+) -> list[m.Quiz]:
     data = encode(
         dict(
             offset=offset,
@@ -29,8 +47,12 @@ def find(offset: int = 0, limit: int = 10, label: str | None = None) -> list[m.Q
             label=label,
         )
     )
+    if token is not None:
+        headers = {"x-token": token}
+    else:
+        headers = None
     url = urljoin(settings.url, f"/quiz/find?{data}")
-    return [m.Quiz.parse_obj(q) for q in list(response(httpx.get(url)))]
+    return [m.Quiz.parse_obj(q) for q in list(response(httpx.get(url, headers=headers)))]
 
 
 def count(label: str | None = None) -> int:
