@@ -7,13 +7,18 @@ from .base import BaseField
 
 class TextField(BaseField[fields.text.Ui_Text, m.TextAnswer]):
     def __init__(
-        self, parent: "widgets.answer.question.Question", model: m.TextAnswer
+        self,
+        parent: "widgets.answer.question.Question",
+        model: m.TextAnswer,
+        read_only: bool = False,
     ) -> None:
-        super().__init__(parent, model, fields.text.Ui_Text)
+        super().__init__(parent, model, fields.text.Ui_Text, read_only)
 
         self.ui.label.setText(self.model.form.label)
         self.ui.field.setText(self.model.value)
         self.ui.field.setPlaceholderText(self.model.form.hint)
+
+        self.ui.field.setReadOnly(self.read_only)
 
         self.ui.field.editingFinished.connect(self.value_updated)
 

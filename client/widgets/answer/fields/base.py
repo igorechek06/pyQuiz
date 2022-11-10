@@ -36,15 +36,18 @@ class BaseField(QtWidgets.QWidget, Generic[UI, M]):
     ui: UI
     model: M
     context: "widgets.answer.question.Question"
+    read_only: bool
 
     def __init__(
         self,
         parent: "widgets.answer.question.Question",
         model: M,
         ui: type[UI],
+        read_only: bool = False,
     ) -> None:
         super().__init__(parent)
         self.ui = ui()
         self.ui.setupUi(self)
         self.model = model
         self.context = parent
+        self.read_only = read_only

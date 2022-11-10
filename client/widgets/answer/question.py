@@ -35,5 +35,5 @@ class Question(QtWidgets.QWidget):
 
         for answer in self.answers.answers:
             self.ui.fieldsLayout.layout().addWidget(
-                widgets.answer.fields.WIDGETS[answer.form.type.value - 1](self, answer)  # type: ignore
+                widgets.answer.fields.WIDGETS[answer.form.type.value - 1](self, answer, self.context.read_only)  # type: ignore
             )

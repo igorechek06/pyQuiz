@@ -12,8 +12,9 @@ class IntegerField(BaseField[fields.integer.Ui_Integer, m.IntegerAnswer]):
         self,
         parent: "widgets.answer.question.Question",
         model: m.IntegerAnswer,
+        read_only: bool = False,
     ) -> None:
-        super().__init__(parent, model, fields.integer.Ui_Integer)
+        super().__init__(parent, model, fields.integer.Ui_Integer, read_only)
 
         self.ui.label.setText(self.model.form.label)
         self.ui.field.setValue(self.model.value)
@@ -25,6 +26,8 @@ class IntegerField(BaseField[fields.integer.Ui_Integer, m.IntegerAnswer]):
             if self.model.form.increase_buttons
             else QAbstractSpinBox.ButtonSymbols.NoButtons
         )
+
+        self.ui.field.setReadOnly(self.read_only)
 
         self.ui.field.editingFinished.connect(self.value_updated)
 

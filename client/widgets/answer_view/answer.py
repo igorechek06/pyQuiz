@@ -25,6 +25,9 @@ class Answer(QtWidgets.QWidget):
         assert self.context.context.context.user is not None
 
         self.ui.username.setText(self.answer.answerer.username)
+        self.ui.viewButton.setHidden(
+            self.answer.answerer.id == self.context.context.context.user.id
+        )
         self.ui.editButton.setHidden(
             self.answer.answerer.id != self.context.context.context.user.id
         )
@@ -46,7 +49,17 @@ class Answer(QtWidgets.QWidget):
         answer.exec()
 
     def view_button(self) -> None:
-        pass
+        assert self.context.context.context.token is not None
+        answer = dialogs.answer.QuizAnswer(
+            self,
+            self.context.context.context.token,
+            self.context.context.quiz,
+            self.answer,
+            self.context.context.ui.image.pixmap(),
+            self.context.context.image_updated,
+            True,
+        )
+        answer.exec()
 
     def delete_button(self) -> None:
         assert self.context.context.context.token is not None
@@ -60,5 +73,5 @@ class Answer(QtWidgets.QWidget):
             == QtWidgets.QMessageBox.Yes
         ):
             a.delete(self.context.context.context.token, self.answer.id)
-            self.context.answers.remove(self.answer)
+            self.context.remove(self.answer)
             self.deleteLater()

@@ -24,6 +24,7 @@ class QuizAnswer(QtWidgets.QDialog):
     ui: gui.dialogs.answer.Ui_QuizAnswer
     context: QtWidgets.QWidget
     token: str
+    read_only: bool
     answers_id: int | None
     answers: a.Answers
 
@@ -37,12 +38,14 @@ class QuizAnswer(QtWidgets.QDialog):
         answers: m.QuizAnswers | None = None,
         pixmap: QtGui.QPixmap | None = None,
         image_updated: QtCore.pyqtBoundSignal | None = None,
+        read_only: bool = False,
     ) -> None:
         super().__init__(parent)
         self.ui = gui.dialogs.answer.Ui_QuizAnswer()
         self.ui.setupUi(self)
         self.context = parent
         self.token = token
+        self.read_only = read_only
 
         quiz = deepcopy(quiz)
         if answers is not None:
@@ -77,8 +80,13 @@ class QuizAnswer(QtWidgets.QDialog):
             image_updated.connect(self.ui.image.setPixmap)
 
         self.ui.label.setText(quiz.label)
-        self.ui.cancelButton.clicked.connect(self.cancel_button)
-        self.ui.saveButton.clicked.connect(self.save_button)
+        if self.read_only:
+            self.ui.cancelButton.hide()
+            self.ui.saveButton.hide()
+        else:
+            self.ui.closeButton.hide()
+            self.ui.cancelButton.clicked.connect(self.cancel_button)
+            self.ui.saveButton.clicked.connect(self.save_button)
 
         self.update_ui.connect(self._update_ui)
         self.update_ui.emit()

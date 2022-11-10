@@ -9,9 +9,12 @@ from .base import BaseField
 
 class DateField(BaseField[fields.date.Ui_Date, m.DateAnswer]):
     def __init__(
-        self, parent: "widgets.answer.question.Question", model: m.DateAnswer
+        self,
+        parent: "widgets.answer.question.Question",
+        model: m.DateAnswer,
+        read_only: bool = False,
     ) -> None:
-        super().__init__(parent, model, fields.date.Ui_Date)
+        super().__init__(parent, model, fields.date.Ui_Date, read_only)
 
         self.ui.label.setText(self.model.form.label)
         self.ui.field.setDate(self.model.value)
@@ -23,6 +26,8 @@ class DateField(BaseField[fields.date.Ui_Date, m.DateAnswer]):
             else QAbstractSpinBox.ButtonSymbols.NoButtons
         )
         self.ui.field.setCalendarPopup(self.model.form.calendar_button)
+
+        self.ui.field.setReadOnly(self.read_only)
 
         self.ui.field.editingFinished.connect(self.value_updated)
 

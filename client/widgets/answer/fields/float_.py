@@ -9,9 +9,12 @@ from .base import BaseField
 
 class FloatField(BaseField[fields.float.Ui_Float, m.FloatAnswer]):
     def __init__(
-        self, parent: "widgets.answer.question.Question", model: m.FloatAnswer
+        self,
+        parent: "widgets.answer.question.Question",
+        model: m.FloatAnswer,
+        read_only: bool = False,
     ) -> None:
-        super().__init__(parent, model, fields.float.Ui_Float)
+        super().__init__(parent, model, fields.float.Ui_Float, read_only)
 
         self.ui.label.setText(self.model.form.label)
         self.ui.field.setDecimals(self.model.form.decimals)
@@ -24,6 +27,8 @@ class FloatField(BaseField[fields.float.Ui_Float, m.FloatAnswer]):
             if self.model.form.increase_buttons
             else QAbstractSpinBox.ButtonSymbols.NoButtons
         )
+
+        self.ui.field.setReadOnly(self.read_only)
 
         self.ui.field.editingFinished.connect(self.value_updated)
 

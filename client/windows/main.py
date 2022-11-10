@@ -67,7 +67,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 exception.args[0],
                 QtWidgets.QMessageBox.Close,
             ).exec()
-            self.update_page()
         else:
             print_exception(exception)
 

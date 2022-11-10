@@ -1,3 +1,6 @@
+import csv
+from os.path import expanduser
+
 from PyQt5 import QtCore, QtWidgets
 
 import gui
@@ -27,7 +30,32 @@ class AnswersView(QtWidgets.QDialog):
         self.update_ui.emit()
 
     def export_button(self) -> None:
-        pass
+        file_name = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Export", expanduser("~"), "CSV таблица (*.csv)"
+        )[0].removesuffix(".csv")
+
+        if len(file_name) > 0:
+            with open(f"{file_name}.csv", "w") as file:
+                writer = csv.writer(file)
+
+                header = ["username"]
+                for q in self.context.quiz.questions:
+                    for f in q.forms:
+                        header.append(f"{q.title}: {f.label}")
+                writer.writerow(header)
+
+                for a in self.answers:
+                    for qa in a.questions:
+                        writer.writerow(
+                            [a.answerer.username] + [str(fa.value) for fa in qa.answers]
+                        )
+
+    def remove(self, answer: m.QuizAnswers) -> None:
+        self.answers.remove(answer)
+        self.context.quiz.has_answers = len(self.answers) > 0
+        if not self.context.quiz.has_answers:
+            self.context.update_ui.emit()
+            self.ui.cancelButton.click()
 
     def update_page(self) -> None:
         def _page() -> None:

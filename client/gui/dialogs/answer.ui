@@ -168,6 +168,20 @@
    <item>
     <layout class="QHBoxLayout" name="buttonsLayout">
      <item>
+      <widget class="QPushButton" name="closeButton">
+       <property name="text">
+        <string>Закрыть</string>
+       </property>
+       <property name="icon">
+        <iconset resource="../../src.qrc">
+         <normaloff>:/src/src/cancel.png</normaloff>:/src/src/cancel.png</iconset>
+       </property>
+       <property name="autoDefault">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QPushButton" name="cancelButton">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -205,5 +219,22 @@
  <resources>
   <include location="../../src.qrc"/>
  </resources>
- <connections/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>QuizAnswer</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>114</x>
+     <y>770</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>-91</x>
+     <y>660</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
 </ui>

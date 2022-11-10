@@ -80,14 +80,19 @@ class Ui_QuizAnswer(object):
         self.verticalLayout.addWidget(self.questionArea)
         self.buttonsLayout = QtWidgets.QHBoxLayout()
         self.buttonsLayout.setObjectName("buttonsLayout")
+        self.closeButton = QtWidgets.QPushButton(QuizAnswer)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(":/src/src/cancel.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        self.closeButton.setIcon(icon)
+        self.closeButton.setAutoDefault(False)
+        self.closeButton.setObjectName("closeButton")
+        self.buttonsLayout.addWidget(self.closeButton)
         self.cancelButton = QtWidgets.QPushButton(QuizAnswer)
         sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Maximum, QtWidgets.QSizePolicy.Fixed)
         sizePolicy.setHorizontalStretch(0)
         sizePolicy.setVerticalStretch(0)
         sizePolicy.setHeightForWidth(self.cancelButton.sizePolicy().hasHeightForWidth())
         self.cancelButton.setSizePolicy(sizePolicy)
-        icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap(":/src/src/cancel.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.cancelButton.setIcon(icon)
         self.cancelButton.setAutoDefault(False)
         self.cancelButton.setObjectName("cancelButton")
@@ -101,12 +106,14 @@ class Ui_QuizAnswer(object):
         self.verticalLayout.addLayout(self.buttonsLayout)
 
         self.retranslateUi(QuizAnswer)
+        self.closeButton.clicked.connect(QuizAnswer.close) # type: ignore
         QtCore.QMetaObject.connectSlotsByName(QuizAnswer)
 
     def retranslateUi(self, QuizAnswer):
         _translate = QtCore.QCoreApplication.translate
         QuizAnswer.setWindowTitle(_translate("QuizAnswer", "Answer"))
         self.label.setText(_translate("QuizAnswer", "Quiz name"))
+        self.closeButton.setText(_translate("QuizAnswer", "Закрыть"))
         self.cancelButton.setText(_translate("QuizAnswer", "Отменить"))
         self.saveButton.setText(_translate("QuizAnswer", "Сохранить ответ"))
 import src_rc
