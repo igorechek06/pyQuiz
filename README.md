@@ -39,13 +39,13 @@ PyQuiz - это приложение написанное как 1 проект 
     3.1 При установке зависимостей глобально
 
     ```sh
-    python main.py
+    python app.py
     ```
 
     3.2 При установке с помощью poetry
 
     ```sh
-    poetry run python main.py
+    poetry run python app.py
     ```
 
 ### Запуск сервера
@@ -74,6 +74,14 @@ PyQuiz - это приложение написанное как 1 проект 
 
     ```sh
     docker compose up --build -d
+    ```
+
+4. Запуск клиента с указанием другого веб сервера
+
+    Вместо <https://example.com> укажите ссылку на веб сервер
+
+    ```sh
+    URL="https://example.com" python app.py
     ```
 
 ## Лицензия
