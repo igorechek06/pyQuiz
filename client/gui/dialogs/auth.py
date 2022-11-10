@@ -76,7 +76,7 @@ class Ui_AuthDialog(object):
         self.verticalLayout.addWidget(self.authTabWidget)
 
         self.retranslateUi(AuthDialog)
-        self.authTabWidget.setCurrentIndex(0)
+        self.authTabWidget.setCurrentIndex(1)
         self.loginUsernameField.returnPressed.connect(self.loginPasswordField.setFocus) # type: ignore
         self.registerUsernameField.returnPressed.connect(self.registerPasswordField.setFocus) # type: ignore
         self.registerPasswordField.returnPressed.connect(self.registerRepeatPasswordField.setFocus) # type: ignore
@@ -94,6 +94,6 @@ class Ui_AuthDialog(object):
         self.registerPasswordField.setPlaceholderText(_translate("AuthDialog", "Пароль"))
         self.registerRepeatPasswordField.setPlaceholderText(_translate("AuthDialog", "Повторите пароль"))
         self.registerShowPasswordCheckbox.setText(_translate("AuthDialog", "Показать пароль"))
-        self.registerButton.setText(_translate("AuthDialog", "Зарегестрироваться"))
+        self.registerButton.setText(_translate("AuthDialog", "Зарегистрироваться"))
         self.authTabWidget.setTabText(self.authTabWidget.indexOf(self.registerLayout), _translate("AuthDialog", "Регистрация"))
 import src_rc

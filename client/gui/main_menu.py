@@ -122,7 +122,7 @@ class Ui_MainMenu(object):
         _translate = QtCore.QCoreApplication.translate
         MainMenu.setWindowTitle(_translate("MainMenu", "PyQuiz"))
         self.authButton.setText(_translate("MainMenu", "Авторизоваться"))
-        self.searchField.setPlaceholderText(_translate("MainMenu", "Имя"))
+        self.searchField.setPlaceholderText(_translate("MainMenu", "Имя опроса"))
         self.searchButton.setText(_translate("MainMenu", "Найти"))
         self.pageSelectorField.setSuffix(_translate("MainMenu", "/1"))
         self.createQuizButton.setText(_translate("MainMenu", "Создать опрос"))

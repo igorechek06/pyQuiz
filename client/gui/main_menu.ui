@@ -63,7 +63,7 @@
       <item>
        <widget class="QLineEdit" name="searchField">
         <property name="placeholderText">
-         <string>Имя</string>
+         <string>Имя опроса</string>
         </property>
         <property name="clearButtonEnabled">
          <bool>true</bool>

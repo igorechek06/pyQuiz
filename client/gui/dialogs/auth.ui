@@ -29,7 +29,7 @@
    <item>
     <widget class="QTabWidget" name="authTabWidget">
      <property name="currentIndex">
-      <number>0</number>
+      <number>1</number>
      </property>
      <widget class="QWidget" name="loginLayout">
       <attribute name="title">
@@ -144,7 +144,7 @@
        <item>
         <widget class="QPushButton" name="registerButton">
          <property name="text">
-          <string>Зарегестрироваться</string>
+          <string>Зарегистрироваться</string>
          </property>
          <property name="icon">
           <iconset resource="../../src.qrc">
